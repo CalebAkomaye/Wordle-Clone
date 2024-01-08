@@ -1,0 +1,96 @@
+:root {
+  ---bg--color: #13141c;
+  ---row-border: 3px solid #414458;
+  ---row-background: #191a24;
+  ---text--color: #fff;
+  ---box--popIn--color: #7b7f98;
+  ---fnt--size: 28px;
+  ---fnt-weigth: 700;
+}
+
+*,
+::after,
+::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(---bg--color);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+main {
+  margin-top: 15.8rem;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+}
+.row-letter {
+  width: 48px;
+  margin: 3px;
+  height: 48px;
+  color: var(---text--color);
+  font-weight: var(---fnt-weigth);
+  font-size: var(---fnt--size);
+  padding: 2.5rem;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  text-transform: uppercase;
+  align-items: center;
+  border-color: #7b7f98;
+  border: var(---row-border);
+  background-color: var(---row-background);
+}
+
+div.popIn {
+  animation: popIn 300ms linear 1;
+  border-color: var(---box--popIn--color);
+}
+
+@-webkit-keyframes popIn {
+  0% {
+    transform: scale(0.9);
+  }
+  10% {
+    transform: scale(1.1);
+  }
+}
+div.success {
+  background-color: #79b851 !important;
+  border-color: #79b851 !important;
+  color: #fff !important;
+}
+
+div.present {
+  background-color: #f3c237 !important;
+  border-color: #f3c237 !important;
+  color: #fff !important;
+}
+
+div.absent {
+  background-color: #3d4054 !important;
+  border-color: #3d4054 !important;
+  color: #fff !important;
+}
+
+.row-letter.flip {
+  animation: flip 150ms 1;
+}
+@keyframes flip {
+  0% {
+    transform: rotateX(-90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
