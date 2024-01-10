@@ -2,8 +2,9 @@ let currentRow = 0;
 let divLetters = '';
 const maxRows = 6;
 const maxCols = 5;
-let guesses = ['apple', 'baker', 'cater', 'gamer', 'stone'];
-
+const wordList = ['apple', 'baker', 'cater', 'gamer', 'stone', 'match'];
+let guesses = wordList[Math.floor(Math.random() * wordList.length) + 1];
+console.log(guesses);
 const gameRow = document.getElementById('game');
 
 function createGrid(columns, rows) {
@@ -30,15 +31,31 @@ function userInput(e) {
     updateLetters(inputLetter);
   } else if (e.key === 'Backspace') {
     delLetter();
-  } else if (e.key === 'Enter' && divLetters.length >= 4) {
-    submitEvent();
+  } else if (e.key === 'Enter') {
+    divLetters.length < 5 ? info('word is too short', 1000) : checkWord();
   }
 }
 
+function info(Text, duration) {
+  const main = document.getElementById('main');
+  const info = document.createElement('div');
+  info.classList.add('alert');
+  info.classList.add('fade-in');
+  const p = document.createElement('p');
+  info.appendChild(p);
+  p.innerText = Text;
+  main.appendChild(info);
+
+  setTimeout(() => {
+    info.remove();
+  }, duration);
+}
+
 function updateLetters(letter) {
-  divLetters += letter;
-  const lettersToDisplay = divLetters.slice(0, 5);
-  updateTiles(lettersToDisplay);
+  if (divLetters.length < maxCols) {
+    divLetters += letter;
+    updateTiles(divLetters);
+  }
 }
 
 function updateTiles(letters) {
@@ -46,7 +63,7 @@ function updateTiles(letters) {
   const columns = rowDiv.querySelectorAll('.row-letter');
 
   letters.split('').forEach((letter, index) => {
-    columns[index].innerText = letter.slice(0, 5);
+    columns[index].innerText = letter;
     columns[index].classList.add('popIn');
   });
 }
@@ -64,16 +81,23 @@ function delFromTile() {
   columns[divLetters.length].classList.remove('popIn');
 }
 
+function checkWord() {
+  !wordList.includes(divLetters)
+    ? info('not in word list', 2500)
+    : submitEvent();
+}
+
 function submitEvent() {
   const rowDiv = document.querySelectorAll('.row')[currentRow];
   for (let i = 0; i < divLetters.length; i++) {
     const tileEl = rowDiv.querySelector('#tile-' + i);
     revealTile(tileEl, i);
   }
+  rowCount();
 }
 
 const revealTile = (tileEl, tileIndex) => {
-  const getWord = guesses[0];
+  const getWord = guesses;
   const guessedLetter = divLetters.charAt(tileIndex);
   const wordLetter = getWord.charAt(tileIndex);
 
@@ -93,17 +117,15 @@ const applyClassAndAnimate = (element, className, tileNum) => {
 function flipTile(element, className, tileNum) {
   setTimeout(() => {
     element.classList.add('flip', className);
-    rowCount();
   }, (tileNum * 200) / 2);
+  guesses === divLetters ? info('you win', 1000) : console.log('trying');
+  // currentRow === 6 ? info('you loose', 4000) : console.log(currentRow);
 }
 
 function rowCount() {
-  currentRow++;
-  gameRow.setAttribute('data-id', currentRow);
-  divLetters = divLetters.slice(5);
-  if (currentRow === 5) {
-    currentRow = 1;
-  }
+  currentRow = (currentRow + 1) % maxRows;
+  gameRow.setAttribute('data-id', currentRow + 1);
+  divLetters = '';
 }
 
 document.addEventListener('keydown', userInput);
