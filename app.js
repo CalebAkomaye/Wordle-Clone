@@ -15304,8 +15304,7 @@ function createGrid(columns, rows) {
 
     for (let j = 0; j < rows; j++) {
       const column = document.createElement('div');
-      column.classList.add('row-letter');
-      column.classList.add('active-tile');
+      column.classList.add('row-letter', 'active-tile');
       column.setAttribute('id', 'tile-' + j);
 
       row.appendChild(column);
@@ -15315,23 +15314,42 @@ function createGrid(columns, rows) {
 }
 
 function userInput(e) {
-  const inputLetter = e.key.toLowerCase();
+  const inputLetter = e.key
+    ? e.key.toLowerCase()
+    : e.target && e.target.innerText.toLowerCase();
+
   const letters = /[a-z]/;
 
-  if (letters.test(inputLetter) && inputLetter.length === 1) {
+  if (
+    letters.test(inputLetter) &&
+    inputLetter.length === 1 &&
+    hasAvailableTile()
+  ) {
     updateLetters(inputLetter);
-  } else if (e.key === 'Backspace') {
+  } else if (
+    e.key === 'Backspace' ||
+    (e.target && e.target.textContent.toLowerCase() === ' ')
+  ) {
     delLetter();
-  } else if (e.key === 'Enter') {
+  } else if (
+    e.key === 'Enter' ||
+    (e.target && e.target.textContent.toLowerCase() === 'enter')
+  ) {
     divLetters.length < 5 ? info('word is too short', 1000) : checkWord();
+    render();
   }
+}
+
+function hasAvailableTile() {
+  const rowDiv = document.querySelectorAll('.row')[currentRow];
+  const columns = rowDiv.querySelectorAll('.row-letter');
+  return [...columns].some((column) => column.innerText === '');
 }
 
 function info(Text, duration) {
   const main = document.getElementById('main');
   const info = document.createElement('div');
-  info.classList.add('alert');
-  info.classList.add('fade-in');
+  info.classList.add('alert', 'fade-in');
   const p = document.createElement('p');
   info.appendChild(p);
   p.innerText = Text;
@@ -15361,7 +15379,6 @@ function updateTiles(letters) {
 
   letters.split('').forEach((letter, index) => {
     columns[index].innerText = letter;
-
     columns[index].classList.add('popIn');
   });
 }
@@ -15417,7 +15434,6 @@ function flipTile(element, className, tileNum) {
 function callWin() {
   dance();
   info('you win', 5000);
-  return;
 }
 
 function dance() {
@@ -15429,9 +15445,16 @@ function dance() {
   });
 }
 
+function render() {
+  dance();
+  shakeTile();
+}
+
 function chechLoss() {
   if (currentRow === 5 && guesses !== divLetters) {
-    info('you loosed', 5000);
+    setTimeout(() => {
+      info('you lost \n the word was ' + guesses, 5000 * 2);
+    }, 1000);
   }
 }
 
@@ -15439,8 +15462,7 @@ function shakeTile() {
   const row = document.querySelector('.row');
   const columns = row.querySelectorAll('.row-letter');
   columns.forEach((tile, index) => {
-    columns[index].classList.add('active-tile');
-    tile.classList.add('shake-Tile');
+    columns[index].classList.add('active-tile', 'shake-Tile');
   });
 }
 
@@ -15449,6 +15471,9 @@ function rowCount() {
   gameRow.setAttribute('data-id', currentRow + 1);
   divLetters = '';
 }
+
+const keyboard = document.getElementById('keyboard');
+keyboard.addEventListener('click', userInput);
 
 document.addEventListener('keydown', userInput);
 createGrid(maxRows, maxCols);

@@ -26,8 +26,29 @@ body {
   justify-content: center;
 }
 
+nav {
+  width: 100%;
+  height: 2.5rem;
+  border-bottom: var(---row-border);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.details {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 50%;
+  border: 1px dashed var(---row-border);
+  display: inline-block;
+  background-color: var(---box--popIn--color);
+}
+
 main {
-  margin-top: 15.8rem;
+  margin-top: 1.8rem;
 }
 
 .row {
@@ -72,25 +93,80 @@ main {
   opacity: 0;
   transition: opacity 500ms ease-in-out;
 }
+.keyboard {
+  font-size: 16px;
+  margin-top: 5rem;
+  display: grid;
+  grid-template-columns: repeat(20, minmax(auto, 1.25em));
+  grid-auto-rows: 3em;
+  gap: 0.25em;
+  justify-content: center;
+}
+
+.key {
+  grid-column: span 2;
+  border: none;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: hsl(
+    var(--hue, 200),
+    var(--saturation, 1%),
+    calc(var(--lightness-offset, 0%) + var(--lightness, 51%))
+  );
+  color: white;
+  fill: white;
+  text-transform: uppercase;
+  border-radius: 0.25em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.key.large {
+  grid-column: span 3;
+}
+
+.key > svg {
+  width: 1.75em;
+  height: 1.75em;
+}
+
+.key:hover,
+.key:focus {
+  --lightness-offset: 10%;
+}
+
+.key.wrong {
+  --lightness: 23%;
+}
+
+.key.wrong-location {
+  --hue: 49;
+  --saturation: 51%;
+  --lightness: 47%;
+}
+
+.key.correct {
+  --hue: 115;
+  --saturation: 29%;
+  --lightness: 43%;
+}
 
 .alert p {
   margin: 0;
 }
 
-/* Animation */
-@keyframes fade-in {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  to {
-    opacity: 0.3;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-}
-
 .fade-in {
   animation: fade-in 4.3s ease-out forwards;
+}
+
+div.shake-Tile {
+  animation: shakeTile 250ms ease-in-out;
+}
+
+div.dance {
+  animation: dance 500ms ease-in-out;
 }
 
 div.popIn {
@@ -133,5 +209,62 @@ div.absent {
   }
   100% {
     transform: rotateX(0deg);
+  }
+}
+
+/* Animation */
+
+@keyframes fade-in {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+
+@keyframes shakeTile {
+  100% {
+    transform: translateX(0);
+  }
+  75% {
+    transform: translateX(7.5px);
+  }
+  50% {
+    transform: translateX(-7.5px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  0% {
+    transform: translateX(-5px);
+  }
+}
+
+@keyframes dance {
+  20% {
+    transform: translateY(-50%);
+  }
+
+  40% {
+    transform: translateY(5%);
+  }
+
+  60% {
+    transform: translateY(-25%);
+  }
+
+  80% {
+    transform: translateY(2.5%);
+  }
+
+  90% {
+    transform: translateY(-5%);
+  }
+
+  100% {
+    transform: translateY(0);
   }
 }
